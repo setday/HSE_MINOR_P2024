@@ -1,0 +1,4 @@
+PyBot/
+.vscode/
+
+__pycache__/
