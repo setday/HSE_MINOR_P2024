@@ -21,7 +21,7 @@ async def update_data_to_back(bot: Bot, message_id: int, data: str) -> None:
 async def echo_handler(message: Message) -> None:
     await send_data_to_back(message.bot, f'Новое сообщение от пользователя {message.from_user.id}:\n{str(message.text)}')
     # await message.reply(message.text)
-    await message.answer('Зафиксировал.')
+    await message.reply('Зафиксировал.')
 
 @router.message(
         AdminChatFilter(True),
@@ -38,7 +38,7 @@ async def feedback_handler(
         return
 
     try:
-        user_id, text_to_send = command.args.split(" ", maxsplit=1)
+        cmd, user_id, text_to_send = message.html_text.split(" ", maxsplit=2)
     except ValueError:
         await message.answer(
             "Ошибка: неправильный формат команды. Пример:\n"
@@ -46,5 +46,7 @@ async def feedback_handler(
             parse_mode=None
         )
         return
-    message.text = text_to_send
-    await message.copy_to(back_chat_id)
+    if message.photo:
+        await message.bot.send_photo(user_id, message.photo[-1].file_id, caption=text_to_send)
+    else:
+        await message.bot.send_message(user_id, text_to_send, parse_mode="HTML")

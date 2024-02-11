@@ -2,3 +2,5 @@ PyBot/
 .vscode/
 
 __pycache__/
+
+data.txt
