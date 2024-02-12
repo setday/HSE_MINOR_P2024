@@ -7,7 +7,7 @@ from aiogram.types import CallbackQuery
 from aiogram.fsm.storage.base import BaseStorage
 
 from data_register import data_register as dr
-from back_chat import send_data_to_back
+from back_chat.back_chat_utils import send_data_to_back
 
 from service_text import text_error_try_again
 from .weekly_servey.weekly_servey import interupt_weekly_servey, start_weekly_servey
@@ -26,9 +26,9 @@ async def weekly_dservey_start(callback: CallbackQuery, state: FSMContext) -> No
     await callback.answer('Подписка оформлена!')
     await callback.bot.send_message(callback.from_user.id, 'Пожалуйста, включи уведомления. Я буду отправлять сообщения в разное время. Скоро тебе начнут приходить краткие опросы о твоем состоянии. В качестве ответа тебе нужно будет либо нажать на кнопку, либо ввести несколько слов.\n(Если ты захочешь остановить опросы, напиши /stop)')
 
-    logger.info(f'Weekly servey for user {callback.from_user.id} started.')
+    # logger.info(f'Weekly servey for user {callback.from_user.id} started.')
     
-    await wait_next_servey(callback.bot, callback.from_user.id, state.storage)
+    # await wait_next_servey(callback.bot, callback.from_user.id, state.storage)
 
 async def sds(bot: Bot, user_id: int, storage: BaseStorage) -> None:
     await interupt_daily_servey(bot, user_id, storage)
@@ -37,6 +37,16 @@ async def sds(bot: Bot, user_id: int, storage: BaseStorage) -> None:
 async def sws(bot: Bot, user_id: int, storage: BaseStorage) -> None:
     await interupt_weekly_servey(bot, user_id, storage)
     await start_weekly_servey(bot, user_id, storage)
+    
+async def sds_for_all(bot: Bot, storage: BaseStorage) -> None:
+    for user_id in dr.get_all_users():
+        if dr.get_data(user_id)['info']['subscribe']:
+            await sds(bot, user_id, storage)
+
+async def sws_for_all(bot: Bot, storage: BaseStorage) -> None:
+    for user_id in dr.get_all_users():
+        if dr.get_data(user_id)['info']['subscribe']:
+            await sws(bot, user_id, storage)
 
 async def wait_next_servey(bot: Bot, user_id: int, storage: BaseStorage) -> None:
     # user_data = dr.get_data(user_id)

@@ -8,7 +8,7 @@ from aiogram.types import CallbackQuery, InlineKeyboardButton, Message, ReplyKey
 from aiogram.fsm.storage.base import StorageKey, BaseStorage
 
 from data_register import data_register as dr
-from back_chat import send_data_to_back, update_data_to_back
+from back_chat.back_chat_utils import send_data_to_back, update_data_to_back
 
 from .weekly_servey_text import *
 

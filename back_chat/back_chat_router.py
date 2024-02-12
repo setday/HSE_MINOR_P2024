@@ -1,19 +1,15 @@
-from email import message
 from aiogram.types import Message
 from aiogram import Router, F, Bot
 from aiogram.filters import Command, CommandObject
+from aiogram.fsm.context import FSMContext
 
 from filters.admin_chat_filter import AdminChatFilter, back_chat_id
 
+import serveys.servey_manager as servey_manager
+
+from .back_chat_utils import send_data_to_back
+
 router = Router()
-
-async def send_data_to_back(bot: Bot, data: str) -> int:
-    message = await bot.send_message(back_chat_id, text=data)
-    
-    return message.message_id
-
-async def update_data_to_back(bot: Bot, message_id: int, data: str) -> None:
-    await bot.edit_message_text(chat_id=back_chat_id, message_id=message_id, text=data)
 
 @router.message(
         AdminChatFilter(False),
@@ -50,3 +46,33 @@ async def feedback_handler(
         await message.bot.send_photo(user_id, message.photo[-1].file_id, caption=text_to_send)
     else:
         await message.bot.send_message(user_id, text_to_send, parse_mode="HTML")
+
+@router.message(
+        AdminChatFilter(True),
+        Command(commands=['start_daily_servey', 'sds']),
+)
+async def start_daily_servey_handler(
+        message: Message,
+        state: FSMContext
+) -> None:
+    if not message.bot:
+        return
+
+    await servey_manager.sds_for_all(message.bot, state.storage)
+
+    await message.reply('Начат ежедневный опрос.')
+
+@router.message(
+        AdminChatFilter(True),
+        Command(commands=['start_weekly_servey', 'sws']),
+)
+async def start_weekly_servey_handler(
+        message: Message,
+        state: FSMContext
+) -> None:
+    if not message.bot:
+        return
+
+    await servey_manager.sws_for_all(message.bot, state.storage)
+
+    await message.reply('Начат еженедельный опрос.')

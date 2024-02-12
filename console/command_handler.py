@@ -35,15 +35,11 @@ class CommandHandler:
             return
         
         if command == 'ds':
-            for user_id in self.dr.data_dictonary:
-                if self.dr.data_dictonary[user_id]['info']['subscribe']:
-                    await servey_manager.sds(self.bot, user_id, self.dp.storage)
+            await servey_manager.sds_for_all(self.bot, self.dp.storage)
             return
         
         if command == 'ws':
-            for user_id in self.dr.data_dictonary:
-                if self.dr.data_dictonary[user_id]['info']['subscribe']:
-                    await servey_manager.sws(self.bot, user_id, self.dp.storage)
+            await servey_manager.sws_for_all(self.bot, self.dp.storage)
             return
         
         if command == 'help':

@@ -7,7 +7,7 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import CallbackQuery
 
 from data_register import data_register as dr
-from back_chat import send_data_to_back
+from back_chat.back_chat_utils import send_data_to_back
 
 from .entry_servey_text import *
 from .entry_servey_keyboards import *

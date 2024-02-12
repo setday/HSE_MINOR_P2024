@@ -11,6 +11,9 @@ class DataRegister:
         self.data_dictonary[user_id][data_type] = data
 
     def get_data(self, user_id):
+        if user_id not in self.data_dictonary:
+            return None
+
         return self.data_dictonary[user_id]
     
     def get_all_data(self):
@@ -32,5 +35,8 @@ class DataRegister:
     def load_dictionary(self):
         with open('data.txt', 'r') as file:
             self.data_dictonary = json.load(file)
+
+    def get_all_users(self):
+        return self.data_dictonary.keys()
 
 data_register = DataRegister()
