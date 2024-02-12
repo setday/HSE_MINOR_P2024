@@ -1,5 +1,4 @@
 from datetime import date
-import stat
 import time
 
 from aiogram import Router, F, Bot

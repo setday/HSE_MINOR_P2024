@@ -22,6 +22,8 @@ bot = Bot(API_TOKEN, parse_mode=enums.ParseMode.HTML)
 dp = Dispatcher()
 ch = CommandHandler(bot, dp, dr)
 
+ts = servey_manager.TimerServey(bot, dp.storage)
+
 weekly_servey_router = weekly_servey.WeeklyServeyRouter(bot)
 daily_servey_router = daily_servey.DailyServeyRouter(bot)
 
@@ -47,10 +49,12 @@ async def main() -> None:
     cmds = asyncio.create_task(ch.run_command_loop())
     poll = asyncio.create_task(dp.start_polling(bot))
     save = asyncio.create_task(saver())
+    tstk = asyncio.create_task(ts.start())
 
     print('Bot started')
 
     await poll
+    await tstk
     await cmds
     await save
 
