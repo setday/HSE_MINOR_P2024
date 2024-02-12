@@ -111,6 +111,7 @@ class TimerServey:
             delta = 60 * 60 * (20 - hour)
 
         print(f'Expected servey in {delta} seconds. Type: {servey_type}')
+        await send_data_to_back(self.bot, f'Ожидается опрос через {delta} секунд. Тип: {servey_type}')
 
         await asyncio.sleep(delta)
 
