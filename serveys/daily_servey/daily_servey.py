@@ -35,7 +35,7 @@ async def start_daily_servey(bot: Bot, user_id: int, storage: BaseStorage) -> No
     await bot.send_message(user_id, text=text_question[0], reply_markup=keyboard)
     
     state = FSMContext(storage=storage, key=StorageKey(bot.id, user_id, user_id))
-    print(storage, bot.id, user_id, state)
+    # print(storage, bot.id, user_id, state)
 
     await state.update_data(servey_type='daily')
     await state.update_data(date=date.today().isoformat())
@@ -98,7 +98,7 @@ class DailyServeyRouter(Router):
             'answer': callback.data
         })
 
-        await callback.answer(text_lets_begin_daily_servey)
+        await callback.answer('Начнём!')
         await self.bot.send_message(callback.from_user.id, text_question[1])
 
         await state.update_data(q2={

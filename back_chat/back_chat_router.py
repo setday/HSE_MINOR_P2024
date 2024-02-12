@@ -76,3 +76,16 @@ async def start_weekly_servey_handler(
     await servey_manager.sws_for_all(message.bot, state.storage)
 
     await message.reply('Начат еженедельный опрос.')
+
+@router.message(
+        AdminChatFilter(True),
+        Command(commands=['cmd']),
+)
+async def start_weekly_servey_handler(
+        message: Message,
+        state: FSMContext
+) -> None:
+    if not message.bot:
+        return
+    
+    await message.reply('Команда НЕ выполнена.')

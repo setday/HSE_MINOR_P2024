@@ -25,6 +25,12 @@ ch = CommandHandler(bot, dp, dr)
 weekly_servey_router = weekly_servey.WeeklyServeyRouter(bot)
 daily_servey_router = daily_servey.DailyServeyRouter(bot)
 
+async def saver() -> None:
+    while True:
+        await ch.handle_command('save')
+
+        await asyncio.sleep(60 * 60 * 6)
+
 async def main() -> None:
     dp.include_routers(
         entry_router.router,
@@ -37,13 +43,16 @@ async def main() -> None:
 
     # await bot.delete_webhook(drop_pending_updates=True)
 
+    await ch.handle_command('load')
     cmds = asyncio.create_task(ch.run_command_loop())
     poll = asyncio.create_task(dp.start_polling(bot))
+    save = asyncio.create_task(saver())
 
     print('Bot started')
 
     await poll
     await cmds
+    await save
 
 if __name__ == "__main__":
     # logging.basicConfig(

@@ -19,7 +19,7 @@ class EntryRouter(Router):
         self.message.register(self.stop_subscription, Command('stop'), AdminChatFilter(False))
 
     async def send_welcome(self, message: types.Message) -> None:
-        # print('New user:', message.from_user)
+        print('New user:', message.from_user, message.chat.id)
 
         await message.answer(text_hello_with_explanation)
         await message.answer(text_entry_servey_suggestion)

@@ -1,4 +1,5 @@
 import json
+import os
 
 class DataRegister:
     def __init__(self) -> None:
@@ -33,6 +34,8 @@ class DataRegister:
             json.dump(self.data_dictonary, file, indent=2)
 
     def load_dictionary(self):
+        if not os.path.exists('data.txt'):
+            return
         with open('data.txt', 'r') as file:
             self.data_dictonary = json.load(file)
 

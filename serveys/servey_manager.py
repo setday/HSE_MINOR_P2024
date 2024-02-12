@@ -23,7 +23,7 @@ async def weekly_dservey_start(callback: CallbackQuery, state: FSMContext) -> No
         return
 
     # await callback.answer('Подписка оформлена! Стоимость подписки: 10 рублей в день (списание производится по номеру телефона).')
-    await callback.answer('Подписка оформлена!')
+    await callback.answer('Ежедневные анкеты включены!')
     await callback.bot.send_message(callback.from_user.id, 'Пожалуйста, включи уведомления. Я буду отправлять сообщения в разное время. Скоро тебе начнут приходить краткие опросы о твоем состоянии. В качестве ответа тебе нужно будет либо нажать на кнопку, либо ввести несколько слов.\n(Если ты захочешь остановить опросы, напиши /stop)')
 
     # logger.info(f'Weekly servey for user {callback.from_user.id} started.')
