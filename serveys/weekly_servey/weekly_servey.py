@@ -1,5 +1,4 @@
-from datetime import date
-import time
+import utils.timer as timer
 
 from aiogram import Router, F, Bot
 from aiogram.fsm.context import FSMContext
@@ -7,7 +6,7 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import CallbackQuery, InlineKeyboardButton, Message, ReplyKeyboardRemove, InlineKeyboardMarkup
 from aiogram.fsm.storage.base import StorageKey, BaseStorage
 
-from data_register import data_register as dr
+from utils.data_register import data_register as dr
 from back_chat.back_chat_utils import send_data_to_back, update_data_to_back
 
 from .weekly_servey_text import *
@@ -32,10 +31,10 @@ async def start_weekly_servey(bot: Bot, user_id: int, storage: BaseStorage) -> N
     state = FSMContext(storage=storage, key=StorageKey(bot.id, user_id, user_id))
 
     await state.update_data(servey_type='weekly')
-    await state.update_data(date=date.today().isoformat())
+    await state.update_data(date=timer.get_date())
     await state.update_data(user_id=user_id)
     await state.update_data(q1={
-        'question_time': time.time(),
+        'question_time': timer.get_time(),
         'question': text_question_1
     })
     user_data = await state.get_data()
@@ -72,7 +71,7 @@ class WeeklyServeyRouter(Router):
 
     async def weekly_servey_cancel(self, callback: CallbackQuery, state: FSMContext) -> None:
         await state.update_data(a1={
-            'answer_time': time.time(),
+            'answer_time':  timer.get_time(),
             'answer': callback.data
         })
         
@@ -85,14 +84,14 @@ class WeeklyServeyRouter(Router):
 
     async def question_handler_1(self, message: Message, state: FSMContext) -> None:
         await state.update_data(a1={
-            'answer_time': time.time(),
+            'answer_time': timer.get_time(),
             'answer': message.text
         })
 
         await message.answer(text_question_2)
 
         await state.update_data(q2={
-            'question_time': time.time(),
+            'question_time': timer.get_time(),
             'question': text_question_2
         })
         user_data = await state.get_data()
@@ -108,7 +107,7 @@ class WeeklyServeyRouter(Router):
 
     async def question_handler_2(self, message: Message, state: FSMContext) -> None:
         await state.update_data(a2={
-            'answer_time': time.time(),
+            'answer_time': timer.get_time(),
             'answer': message.text
         })
         

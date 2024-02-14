@@ -1,7 +1,7 @@
 from aiogram.types import Message
 from aiogram.filters import BaseFilter
 
-from data_register import data_register as dr
+from utils.data_register import data_register as dr
 
 class RegisterFilter(BaseFilter):
     def __init__(self, is_register: bool = True):

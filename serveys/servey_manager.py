@@ -1,6 +1,7 @@
 import asyncio
 import random
-from datetime import datetime, time
+from datetime import time
+from turtle import update
 from venv import logger
 
 from aiogram import F, Bot, Router
@@ -8,12 +9,14 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 from aiogram.fsm.storage.base import BaseStorage
 
-from data_register import data_register as dr
+from utils.data_register import data_register as dr
 from back_chat.back_chat_utils import send_data_to_back
 
-from service_text import text_error_try_again
+from utils.service_text import text_error_try_again
 from .weekly_servey.weekly_servey import interupt_weekly_servey, start_weekly_servey
 from .daily_servey.daily_servey import interupt_daily_servey, start_daily_servey
+
+import utils.timer as timer
 
 router = Router()
 
@@ -78,53 +81,81 @@ class TimerServey:
         self.bot = bot
         self.storage = storage
 
+        self.servey_queue: list[tuple[time, int]] = []
+
+    async def print_servey_queue(self) -> None:
+        txt = 'Текущая очередь опросов:\n'
+        for i in range(len(self.servey_queue)):
+            txt += f'{i + 1}) {self.servey_queue[i][0]} - {self.servey_queue[i][1]}\n'
+        await send_data_to_back(self.bot, txt)
+
+    async def add_servey(self, servey_type: int, t: time) -> None:
+        self.servey_queue.append((t, servey_type))
+        self.servey_queue.sort()
+        await self.print_servey_queue()
+
+    async def remove_servey(self, id: int) -> None:
+        self.servey_queue.pop(id)
+        await self.print_servey_queue()
+
+    async def update_servey_queue(self) -> None:
+        t = timer.get_time()
+
+        while len(self.servey_queue) > 0 and self.servey_queue[0][0] < t:
+            self.servey_queue.pop(0)
+
+        if len(self.servey_queue) == 0:
+            if timer.get_weekday() != 7:
+                if t < time(3, 10):
+                    self.servey_queue.append((
+                        timer.add_time(
+                            time(3, 10),
+                            int(60 * 60 * 0 * random.random())
+                        ), 1
+                    ))
+                if t < time(17, 0):
+                    self.servey_queue.append((
+                        timer.add_time(
+                            time(18, 0),
+                            int(60 * 60 * 4 * random.random())
+                        ), 1
+                    ))
+            else:
+                if t < time(20, 0):
+                    self.servey_queue.append((
+                        timer.add_time(
+                            time(16, 0),
+                            int(60 * 60 * 4 * random.random())
+                        ), 2
+                    ))
+
+        self.servey_queue.sort()
+        await self.print_servey_queue()
+
     async def start(self) -> None:
-        while is_timer_working:
-            await self.start_servey()
+        while True:
+            await self.update_servey_queue()
 
-            await asyncio.sleep(60 * 60 * 2)
+            if len(self.servey_queue) == 0:
+                await asyncio.sleep(
+                    timer.get_time_to(time(10, 00))
+                )
+                continue
+            
+            await asyncio.sleep(
+                timer.get_time_to(self.servey_queue[0][0]) + 10
+            )
+            if self.servey_queue[0][0] < timer.get_time():
+                await self.start_servey(self.servey_queue[0][1])
+            self.servey_queue.pop(0)
 
-    async def start_servey(self) -> None:
-        servey_type = self.check_if_servey()
-
-        if servey_type == 0:
+    async def start_servey(self, servey_type: int) -> None:
+        if servey_type == 0 or is_timer_working == False:
             print(f'Servey start failed. No servey for now.')
 
             return
         
-        await self.wait_next_servey(servey_type)
-
-        if servey_type == 1 and is_timer_working:
-            await sds_for_all(self.bot, self.storage)
-        if servey_type == 2 and is_timer_working:
-            await sws_for_all(self.bot, self.storage)
-
-        await asyncio.sleep(60 * 60 * 4)
-
-    async def wait_next_servey(self, servey_type: int) -> None:
-        delta = 0
-
         if servey_type == 1:
-            delta = int(60 * 60 * 3 * random.random())
+            await sds_for_all(self.bot, self.storage)
         if servey_type == 2:
-            hour = datetime.now().hour
-            delta = 60 * 60 * (20 - hour)
-
-        print(f'Expected servey in {delta} seconds. Type: {servey_type}')
-        await send_data_to_back(self.bot, f'Ожидается опрос через {delta} секунд. Тип: {servey_type}')
-
-        await asyncio.sleep(delta)
-
-    def check_if_servey(self) -> int: # 0 - no servey, 1 - daily servey, 2 - weekly servey
-        date = datetime.now()
-        servey_type = 1
-
-        if date.isoweekday() == 7:
-            servey_type = 2
-
-        t = date.time()
-        if t >= time(12, 00) and t <= time(17, 00):
-            return servey_type
-        if t >= time(17, 00) and t <= time(22, 00):
-            return servey_type
-        return 0
+            await sws_for_all(self.bot, self.storage)

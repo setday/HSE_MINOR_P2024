@@ -1,5 +1,4 @@
-from datetime import date
-import time
+import utils.timer as timer
 
 from aiogram import Router, F, Bot
 from aiogram.fsm.context import FSMContext
@@ -7,11 +6,11 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import CallbackQuery, InlineKeyboardButton, Message, ReplyKeyboardRemove, InlineKeyboardMarkup
 from aiogram.fsm.storage.base import StorageKey, BaseStorage
 
-from data_register import data_register as dr
+from utils.data_register import data_register as dr
 from back_chat.back_chat_utils import send_data_to_back, update_data_to_back
 
 from .daily_servey_text import *
-from service_text import text_no, text_yes
+from utils.service_text import text_no, text_yes
 
 class OrderDailyServey(StatesGroup):
     writting_question_1 = State()
@@ -37,10 +36,10 @@ async def start_daily_servey(bot: Bot, user_id: int, storage: BaseStorage) -> No
     # print(storage, bot.id, user_id, state)
 
     await state.update_data(servey_type='daily')
-    await state.update_data(date=date.today().isoformat())
+    await state.update_data(date=timer.get_date())
     await state.update_data(user_id=user_id)
     await state.update_data(q1={
-        'question_time': time.time(),
+        'question_time': timer.get_time(),
         'question': text_question[0]
     })
     user_data = await state.get_data()
@@ -80,7 +79,7 @@ class DailyServeyRouter(Router):
 
     async def daily_servey_cancel(self, callback: CallbackQuery, state: FSMContext) -> None:
         await state.update_data(a1={
-            'answer_time': time.time(),
+            'answer_time': timer.get_time(),
             'answer': callback.data
         })
         
@@ -93,7 +92,7 @@ class DailyServeyRouter(Router):
 
     async def question_handler_1(self, callback: CallbackQuery, state: FSMContext) -> None:
         await state.update_data(a1={
-            'answer_time': time.time(),
+            'answer_time': timer.get_time(),
             'answer': callback.data
         })
 
@@ -101,7 +100,7 @@ class DailyServeyRouter(Router):
         await self.bot.send_message(callback.from_user.id, text_question[1])
 
         await state.update_data(q2={
-            'question_time': time.time(),
+            'question_time': timer.get_time(),
             'question': text_question[1]
         })
         user_data = await state.get_data()
@@ -110,14 +109,14 @@ class DailyServeyRouter(Router):
 
     async def question_handler_2(self, message: Message, state: FSMContext) -> None:
         await state.update_data(a2={
-            'answer_time': time.time(),
+            'answer_time': timer.get_time(),
             'answer': message.text
         })
 
         await message.answer(text_question[2])
 
         await state.update_data(q3={
-            'question_time': time.time(),
+            'question_time': timer.get_time(),
             'question': text_question[2]
         })
         user_data = await state.get_data()
@@ -126,14 +125,14 @@ class DailyServeyRouter(Router):
 
     async def question_handler_3(self, message: Message, state: FSMContext) -> None:
         await state.update_data(a3={
-            'answer_time': time.time(),
+            'answer_time': timer.get_time(),
             'answer': message.text
         })
 
         await message.answer(text_question[3])
 
         await state.update_data(q4={
-            'question_time': time.time(),
+            'question_time': timer.get_time(),
             'question': text_question[3]
         })
         user_data = await state.get_data()
@@ -142,14 +141,14 @@ class DailyServeyRouter(Router):
 
     async def question_handler_4(self, message: Message, state: FSMContext) -> None:
         await state.update_data(a4={
-            'answer_time': time.time(),
+            'answer_time': timer.get_time(),
             'answer': message.text
         })
 
         await message.answer(text_question[4])
 
         await state.update_data(q5={
-            'question_time': time.time(),
+            'question_time': timer.get_time(),
             'question': text_question[4]
         })
         user_data = await state.get_data()
@@ -158,7 +157,7 @@ class DailyServeyRouter(Router):
 
     async def question_handler_5(self, message: Message, state: FSMContext) -> None:
         await state.update_data(a5={
-            'answer_time': time.time(),
+            'answer_time': timer.get_time(),
             'answer': message.text
         })
         

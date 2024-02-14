@@ -3,7 +3,7 @@ import sys
 
 from aiogram import Bot, Dispatcher
 
-from data_register import DataRegister
+from utils.data_register import DataRegister
 import serveys.servey_manager as servey_manager
 
 class CommandHandler:

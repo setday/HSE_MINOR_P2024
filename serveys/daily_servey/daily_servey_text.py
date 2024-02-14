@@ -1,4 +1,4 @@
-from service_text import get_readable_time
+from utils.service_text import get_readable_time
 
 text_cancel_servey = 'Отменить опрос'
 text_restart_servey = 'Начать опрос снова'

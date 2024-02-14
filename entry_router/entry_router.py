@@ -8,7 +8,7 @@ from filters.register_filter import RegisterFilter
 from .entry_router_keyboards import *
 from .entry_router_text import *
 
-from data_register import data_register as dr
+from utils.data_register import data_register as dr
 
 class EntryRouter(Router):
     def __init__(self) -> None:
