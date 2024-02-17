@@ -105,7 +105,7 @@ class TimerServey:
             self.servey_queue.pop(0)
 
         if len(self.servey_queue) == 0:
-            if timer.get_weekday() != 6:
+            if timer.get_weekday() != 5:
                 if t < time(12, 00):
                     self.servey_queue.append((
                         timer.add_time(

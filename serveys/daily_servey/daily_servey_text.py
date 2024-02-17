@@ -23,7 +23,7 @@ def format_question_and_answer(question: str, answer: str, question_time: time =
     return f'Q ({make_readable_time(question_time)}): {question}\nA ({make_readable_time(answer_time)}): {answer}\n\n'
 
 def format_user_data(user_data: dict) -> str:
-    res = f'Новая анкета (дневная) от пользователя '+str(user_data['user_id'])+':\n\n'
+    res = f'Новая анкета (дневная) от пользователя '+str(user_data['user_id'])+' | ('+user_data['user_name']+'):\n\n'
 
     for i in range(1, 6):
         question_key = f'q{i}'
