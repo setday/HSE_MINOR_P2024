@@ -32,7 +32,7 @@ async def start_weekly_servey(bot: Bot, user_id: int, storage: BaseStorage) -> N
     state = FSMContext(storage=storage, key=StorageKey(bot.id, user_id, user_id))
 
     await state.update_data(servey_type='weekly')
-    await state.update_data(date=timer.get_date())
+    await state.update_data(date=timer.make_readable_date(timer.get_date()))
     await state.update_data(user_id=user_id)
     await state.update_data(user_name=dr.get_data(user_id)['info']['name'])
     await state.update_data(q1={

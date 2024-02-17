@@ -24,7 +24,7 @@ class OrderIntroServey(StatesGroup):
 @router.callback_query(F.data == 'take_the_servey')
 async def cmd_food(callback: CallbackQuery, state: FSMContext) -> None:
     await state.update_data(servey_type='entry')
-    await state.update_data(date=timer.get_date())
+    await state.update_data(date=timer.make_readable_date(timer.get_date()))
     await state.update_data(user_id=callback.from_user.id)
 
     await callback.answer(text_hint_begin)

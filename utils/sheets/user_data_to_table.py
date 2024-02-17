@@ -53,7 +53,7 @@ def save_user_data(user_data):
     
 def save_entry_servey(user_data):
     user_id = user_data['user_id']
-    date = make_readable_date(user_data['date'])
+    date = user_data['date']
 
     frequency = user_data['frequency']
     severity = user_data['severity']
@@ -74,7 +74,7 @@ def save_entry_servey(user_data):
 
 def save_daily_servey(user_data):
     user_id = user_data['user_id']
-    date = make_readable_date(user_data['date'])
+    date = user_data['date']
 
     att = 'answer_time'
     at = 'answer'
@@ -97,7 +97,7 @@ def save_daily_servey(user_data):
 
 def save_weekly_servey(user_data):
     user_id = user_data['user_id']
-    date = make_readable_date(user_data['date'])
+    date = user_data['date']
 
     att = 'answer_time'
     at = 'answer'

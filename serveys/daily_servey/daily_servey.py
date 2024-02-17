@@ -37,7 +37,7 @@ async def start_daily_servey(bot: Bot, user_id: int, storage: BaseStorage) -> No
     # print(storage, bot.id, user_id, state)
 
     await state.update_data(servey_type='daily')
-    await state.update_data(date=timer.get_date())
+    await state.update_data(date=timer.make_readable_date(timer.get_date()))
     await state.update_data(user_id=user_id)
     await state.update_data(user_name=dr.get_data(user_id)['info']['name'])
     await state.update_data(q1={
