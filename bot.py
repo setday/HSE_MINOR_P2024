@@ -16,14 +16,16 @@ import back_chat.back_chat_router as back_chat
 
 from utils.data_register import data_register as dr
 
-# API_TOKEN = '6945025628:AAFjTcXORaH7HWM-1fBGBTrqMGpyWb7vQoA' # Test
-API_TOKEN = '6812122141:AAGE17rpSpxlbH4F-aa7R1P9TSLD9-JM3_o' # Prod
+API_TOKEN = '6945025628:AAFjTcXORaH7HWM-1fBGBTrqMGpyWb7vQoA' # Test
+# API_TOKEN = '6812122141:AAGE17rpSpxlbH4F-aa7R1P9TSLD9-JM3_o' # Prod
 
 bot = Bot(API_TOKEN, parse_mode=enums.ParseMode.HTML)
 dp = Dispatcher()
 ch = CommandHandler(bot, dp, dr)
 
 ts = servey_manager.TimerServey(bot, dp.storage)
+
+entry_router_router = entry_router.EntryRouter(bot)
 
 weekly_servey_router = weekly_servey.WeeklyServeyRouter(bot)
 daily_servey_router = daily_servey.DailyServeyRouter(bot)
@@ -37,7 +39,7 @@ async def saver() -> None:
 
 async def main() -> None:
     dp.include_routers(
-        entry_router.router,
+        entry_router_router,
         servey_manager.router,
         entry_servey.router,
         daily_servey_router,
@@ -45,7 +47,7 @@ async def main() -> None:
         back_chat_router
         )
 
-    # await bot.delete_webhook(drop_pending_updates=True)
+    await bot.delete_webhook(drop_pending_updates=True)
 
     await ch.handle_command('load')
     cmds = asyncio.create_task(ch.run_command_loop())
@@ -54,6 +56,8 @@ async def main() -> None:
     tstk = asyncio.create_task(ts.start())
 
     print('Bot started')
+
+    # await entry_router_router.suggest_update()
 
     await poll
     await tstk

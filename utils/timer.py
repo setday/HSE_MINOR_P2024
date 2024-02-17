@@ -46,4 +46,4 @@ def make_readable_date(date: datetime) -> str:
     return date.strftime('%d.%m.%Y %H:%M:%S')
 
 def make_readable_time(t: time) -> str:
-    return t.strftime('%H:%M:%S')
+    return t.strftime('%H:%M')

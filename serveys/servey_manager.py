@@ -105,15 +105,15 @@ class TimerServey:
             self.servey_queue.pop(0)
 
         if len(self.servey_queue) == 0:
-            if timer.get_weekday() != 7:
-                if t < time(3, 10):
+            if timer.get_weekday() != 6:
+                if t < time(12, 00):
                     self.servey_queue.append((
                         timer.add_time(
-                            time(3, 10),
-                            int(60 * 60 * 0 * random.random())
+                            time(12, 00),
+                            int(60 * 60 * 4 * random.random())
                         ), 1
                     ))
-                if t < time(17, 0):
+                if t < time(18, 0):
                     self.servey_queue.append((
                         timer.add_time(
                             time(18, 0),
