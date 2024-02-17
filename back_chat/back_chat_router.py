@@ -1,5 +1,5 @@
 from datetime import time
-from aiogram import Router, Bot
+from aiogram import Router, Bot, F
 from aiogram.types import Message
 from aiogram.filters import Command, CommandObject
 from aiogram.fsm.context import FSMContext
@@ -22,14 +22,15 @@ class BackChatRouter(Router):
         self.timer = timer
 
         self.message.register(self.echo_handler, AdminChatFilter(False))
-        self.message.register(self.feedback_handler, AdminChatFilter(True), Command(commands=['send_stat', 'ss']))
-        self.message.register(self.start_daily_servey_handler, AdminChatFilter(True), Command(commands=['start_daily_servey', 'sds']))
-        self.message.register(self.start_weekly_servey_handler, AdminChatFilter(True), Command(commands=['start_weekly_servey', 'sws']))
-        self.message.register(self.stop_timer_handler, AdminChatFilter(True), Command(commands=['stop_timer', 'st']))
-        self.message.register(self.start_timer_handler, AdminChatFilter(True), Command(commands=['continue_timer', 'ct']))
+        self.message.register(self.feedback_handler, AdminChatFilter(True), Command(commands=['send_feedback', 'sf']))
+        # self.message.register(self.start_daily_servey_handler, AdminChatFilter(True), Command(commands=['start_daily_servey', 'sds']))
+        # self.message.register(self.start_weekly_servey_handler, AdminChatFilter(True), Command(commands=['start_weekly_servey', 'sws']))
+        # self.message.register(self.stop_timer_handler, AdminChatFilter(True), Command(commands=['stop_timer', 'st']))
+        # self.message.register(self.start_timer_handler, AdminChatFilter(True), Command(commands=['continue_timer', 'ct']))
         self.message.register(self.add_servey_handler, AdminChatFilter(True), Command(commands=['add_servey', 'as']))
         self.message.register(self.remove_servey_handler, AdminChatFilter(True), Command(commands=['remove_servey', 'rs']))
         self.message.register(self.execute_command_handler, AdminChatFilter(True), Command(commands=['cmd']))
+        self.message.register(self.any_command_handler, AdminChatFilter(True), F.text[0] == '/')
         
     async def echo_handler(self, message: Message) -> None:
         await send_data_to_back(self.bot, f'Новое сообщение от пользователя {message.from_user.id}:\n{str(message.text)}')
@@ -164,6 +165,15 @@ class BackChatRouter(Router):
             )
             return
 
-        await self.ch.handle_command(command.args)
+        await message.reply(await self.ch.handle_command(command.args))
 
-        await message.reply('Команда выполнена.')
+    async def any_command_handler(
+            self, 
+            message: Message
+    ) -> None:
+        command = CommandObject(
+            command='cmd',
+            args=message.text[1:]
+        )
+        # await message.reply(f'Команда не найдена. Интерпретирую как /cmd {message.text[1:]}')
+        await self.execute_command_handler(message, command)

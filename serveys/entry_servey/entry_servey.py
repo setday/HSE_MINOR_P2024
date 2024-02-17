@@ -1,4 +1,5 @@
-import time
+import utils.timer as timer
+
 from venv import logger
 
 from aiogram import Router, F
@@ -8,6 +9,7 @@ from aiogram.types import CallbackQuery
 
 from utils.data_register import data_register as dr
 from back_chat.back_chat_utils import send_data_to_back
+from utils.sheets.user_data_to_table import save_user_data
 
 from .entry_servey_text import *
 from .entry_servey_keyboards import *
@@ -21,7 +23,8 @@ class OrderIntroServey(StatesGroup):
 
 @router.callback_query(F.data == 'take_the_servey')
 async def cmd_food(callback: CallbackQuery, state: FSMContext) -> None:
-    await state.update_data(date=time.time())
+    await state.update_data(servey_type='entry')
+    await state.update_data(date=timer.get_date())
     await state.update_data(user_id=callback.from_user.id)
 
     await callback.answer(text_hint_begin)
@@ -69,6 +72,7 @@ async def severity_choosen(callback: CallbackQuery, state: FSMContext) -> None:
     dr.register_data(user_data['user_id'], user_data, 'info')
 
     await send_data_to_back(callback.bot, format_user_data(user_data))
+    save_user_data(user_data)
 
     await callback.message.answer( # type: ignore
         text=text_lets_begin_workig_together,

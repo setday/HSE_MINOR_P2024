@@ -8,6 +8,7 @@ from aiogram.fsm.storage.base import StorageKey, BaseStorage
 
 from utils.data_register import data_register as dr
 from back_chat.back_chat_utils import send_data_to_back, update_data_to_back
+from utils.sheets.user_data_to_table import save_user_data
 
 from .weekly_servey_text import *
 
@@ -80,6 +81,7 @@ class WeeklyServeyRouter(Router):
 
         user_data = await state.get_data()
         await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
+        save_user_data(user_data)
         
         await interupt_weekly_servey(self.bot, callback.from_user.id, state.storage)
 
@@ -96,7 +98,7 @@ class WeeklyServeyRouter(Router):
             'question': text_question_2
         })
         user_data = await state.get_data()
-        await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
+        # await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
         await state.set_state(OrderWeeklyServey.writting_question_2)
 
     async def writing_strategies(self, message: Message, state: FSMContext) -> None:
@@ -116,6 +118,7 @@ class WeeklyServeyRouter(Router):
         # print('Server info: %s', user_data)
         dr.merge_data(user_data['user_id'], user_data, 'servey')
         await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
+        save_user_data(user_data)
 
         await message.answer(
             text=text_thanks_for_answers

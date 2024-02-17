@@ -1,4 +1,5 @@
 import asyncio
+import re
 import sys
 
 from aiogram import Bot, Dispatcher
@@ -15,58 +16,81 @@ class CommandHandler:
         self.dp = dp
         self.dr = dr
 
-    async def handle_command(self, command: str) -> None:
+    async def handle_command(self, command: str) -> str:
         command = command.split()[0]
-        print('->', command)
+        res = f'-> {command}\n'
+        
         if command == 'exit':
             await self.handle_command('save')
-            print('Exiting...')
+            res += 'Exiting...\n'
+            print(res)
             sys.exit(0)
 
         if command == 'save':
-            print('Saving...')
             self.dr.save_dictionary()
-            return
+            res += 'Saved.\n'
+            return res
         
         if command == 'load':
-            print('Loading...')
             self.dr.load_dictionary()
+            res += 'Loaded.\n'
             await self.handle_command('user_data')
+
+            return res
         
         if command == 'user_data' or command == 'ud':
-            print(self.dr._data_dictonary)
-            return
+            res += f'User data:\n{self.dr._data_dictonary}\n'
+            return res
         
         if command == 'start_daily_servey' or command == 'sds':
             await servey_manager.sds_for_all(self.bot, self.dp.storage)
-            return
+            res += 'Daily servey started for all users.\n'
+            return res
         
         if command == 'start_weekly_servey' or command == 'sws':
             await servey_manager.sws_for_all(self.bot, self.dp.storage)
-            return
+            res += 'Weekly servey started for all users.\n'
+            return res
         
         if command == 'suggest_update' or command == 'su':
             for user_id in self.dr.get_all_users():
                 # if dr.get_data(user_id)['reg']['subscribe']:
                 await self.bot.send_message(user_id, text_update_is_there, reply_markup=get_update_keyboard())
-            return
+            res += 'Suggested update to all users.\n'
+            return res
+        
+        if command == 'stop_timer' or command == 'st':
+            servey_manager.is_timer_working = False
+            
+            res += 'Timer stopped.\n'
+            return res
+        
+        if command == 'continue_timer' or command == 'ct':
+            servey_manager.is_timer_working = True
+            
+            res += 'Timer started.\n'
+            return res
         
         if command == 'help':
-            print('''
+            res += '''
     Commands:
     1) exit - exit the program
     2) save - save the data
-    3) user_data - print the user data
-    4) start_daily_servey - start the daily servey
-    5) start_weekly_servey - start the weekly servey
-    6) suggest_update - suggest update to all users
-    4) help - print this message
-                ''')
-            return
+    3) load - load the data
+    4) user_data - print the user data
+    5) start_daily_servey - start the daily servey
+    6) start_weekly_servey - start the weekly servey
+    7) suggest_update - suggest update to all users
+    8) stop_timer - stop automatic servey sending
+    9) continue_timer - continue automatic servey sending
+    10) help - print this message
+                '''
+            return res
         
-        print('Unknown command')
+        res += 'Unknown command\n'
+        return res
 
     async def run_command_loop(self) -> None:
         while True:
             cmd = await asyncio.get_event_loop().run_in_executor(None, sys.stdin.readline)
-            await self.handle_command(cmd)
+            print(await self.handle_command(cmd))
