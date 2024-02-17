@@ -90,7 +90,7 @@ class DailyServeyRouter(Router):
 
         user_data = await state.get_data()
         await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
-        save_user_data(user_data)
+        # save_user_data(user_data)
         
         await interupt_daily_servey(self.bot, callback.from_user.id, state.storage)
 
@@ -104,7 +104,7 @@ class DailyServeyRouter(Router):
 
         user_data = await state.get_data()
         await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
-        save_user_data(user_data)
+        # save_user_data(user_data)
         
         await interupt_daily_servey(self.bot, message.from_user.id, state.storage)
 
@@ -199,7 +199,7 @@ class DailyServeyRouter(Router):
         # print('Server info: %s', user_data)
         dr.merge_data(user_data['user_id'], user_data, 'servey')
         await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
-        save_user_data(user_data)
+        # save_user_data(user_data)
 
         await message.answer(
             text=text_thanks_for_answers

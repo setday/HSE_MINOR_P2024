@@ -72,7 +72,7 @@ async def severity_choosen(callback: CallbackQuery, state: FSMContext) -> None:
     dr.register_data(user_data['user_id'], user_data, 'info')
 
     await send_data_to_back(callback.bot, format_user_data(user_data))
-    save_user_data(user_data)
+    # save_user_data(user_data)
 
     await callback.message.answer( # type: ignore
         text=text_lets_begin_workig_together,

@@ -41,18 +41,15 @@ frequency_answers = [
 ]
 
 def save_user_data(user_data):
-    try:
-        user_data_type = user_data['servey_type']
-    
-        match user_data_type:
-            case 'entry':
-                save_entry_servey(user_data)
-            case 'daily':
-                save_daily_servey(user_data)
-            case 'weekly':
-                save_weekly_servey(user_data)
-    except Exception as e:
-        print(f'An error occurred: {e}')
+    user_data_type = user_data['servey_type']
+
+    match user_data_type:
+        case 'entry':
+            save_entry_servey(user_data)
+        case 'daily':
+            save_daily_servey(user_data)
+        case 'weekly':
+            save_weekly_servey(user_data)
     
 def save_entry_servey(user_data):
     user_id = user_data['user_id']
