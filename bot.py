@@ -16,8 +16,8 @@ import back_chat.back_chat_router as back_chat
 
 from utils.data_register import data_register as dr
 
-API_TOKEN = '6945025628:AAFjTcXORaH7HWM-1fBGBTrqMGpyWb7vQoA' # Test
-# API_TOKEN = '6812122141:AAGE17rpSpxlbH4F-aa7R1P9TSLD9-JM3_o' # Prod
+# API_TOKEN = '6945025628:AAFjTcXORaH7HWM-1fBGBTrqMGpyWb7vQoA' # Test
+API_TOKEN = '6812122141:AAGE17rpSpxlbH4F-aa7R1P9TSLD9-JM3_o' # Prod
 
 bot = Bot(API_TOKEN, parse_mode=enums.ParseMode.HTML)
 dp = Dispatcher()
