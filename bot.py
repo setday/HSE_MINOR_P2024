@@ -47,7 +47,7 @@ async def main() -> None:
         back_chat_router
         )
 
-    await bot.delete_webhook(drop_pending_updates=True)
+    # await bot.delete_webhook(drop_pending_updates=True)
 
     await ch.handle_command('load')
     cmds = asyncio.create_task(ch.run_command_loop())

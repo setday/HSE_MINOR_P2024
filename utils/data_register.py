@@ -40,6 +40,12 @@ class DataRegister:
             json.dump(self._data_dictonary, file, indent=2)
 
     def load_dictionary(self):
+        if os.path.exists('data.txt'):
+            with open('data.txt', 'r') as file:
+                tmp_dictonary = json.load(file)
+                self._data_dictonary = {int(key): value for key, value in tmp_dictonary.items()}
+                os.remove('data.txt')
+
         if not os.path.exists('data/data.txt'):
             if 'user_data' not in self._data_shelf:
                 self._data_dictonary = {}
