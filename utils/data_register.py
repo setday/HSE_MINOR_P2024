@@ -7,6 +7,8 @@ from typing import Any
 class DataRegister:
     def __init__(self) -> None:
         self._data_dictonary = {}
+        if not os.path.exists('data'):
+            os.mkdir('data')
         self._data_shelf = shelve.open('data/data.db')
 
     def register_data(self, user_id, data, data_type):
@@ -44,7 +46,8 @@ class DataRegister:
             with open('data.txt', 'r') as file:
                 tmp_dictonary = json.load(file)
                 self._data_dictonary = {int(key): value for key, value in tmp_dictonary.items()}
-                os.remove('data.txt')
+                # os.remove('data.txt')
+            return
 
         if not os.path.exists('data/data.txt'):
             if 'user_data' not in self._data_shelf:
