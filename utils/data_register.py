@@ -16,7 +16,6 @@ class DataRegister:
             self._data_dictonary[user_id] = {}
 
         self._data_dictonary[user_id][data_type] = data
-        print(self._data_dictonary)
 
     def get_data(self, user_id):
         if user_id not in self._data_dictonary:

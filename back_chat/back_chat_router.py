@@ -165,7 +165,9 @@ class BackChatRouter(Router):
             )
             return
 
-        await message.reply(await self.ch.handle_command(command.args))
+        res = await self.ch.handle_command(command.args)
+        print(res)
+        await message.reply(res)
 
     async def any_command_handler(
             self, 

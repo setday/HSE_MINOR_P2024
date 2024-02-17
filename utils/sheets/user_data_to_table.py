@@ -68,7 +68,6 @@ def save_entry_servey(user_data):
     body = {
         'values': [answers]
     }
-    print(body)
     service.spreadsheets().values().append(
         spreadsheetId=SAMPLE_SPREADSHEET_ID, range=f'Респ {user_id}!A8',
         valueInputOption="RAW", body=body, insertDataOption='INSERT_ROWS').execute()
@@ -92,7 +91,6 @@ def save_daily_servey(user_data):
     body = {
         'values': [answers]
     }
-    print(body)
     service.spreadsheets().values().append(
         spreadsheetId=SAMPLE_SPREADSHEET_ID, range=f'Респ {user_id}!A8',
         valueInputOption="RAW", body=body, insertDataOption='INSERT_ROWS').execute()
@@ -121,7 +119,6 @@ def save_weekly_servey(user_data):
     body = {
         'values': [answers]
     }
-    print(body)
     service.spreadsheets().values().append(
         spreadsheetId=SAMPLE_SPREADSHEET_ID, range=f'Респ {user_id}!A8',
         valueInputOption="RAW", body=body, insertDataOption='INSERT_ROWS').execute()
