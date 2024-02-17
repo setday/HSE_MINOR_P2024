@@ -1,6 +1,4 @@
-from datetime import time
-
-from utils.timer import make_readable_time
+from utils.service_text import format_user_data as fud
 
 text_cancel_servey = 'Отменить опрос'
 text_restart_servey = 'Начать опрос снова'
@@ -16,23 +14,5 @@ text_question_4 = '📍 Вопрос 4: Понял! Оцени тяжесть п
 text_question_5 = '📍 Вопрос 5: Какие эмоции ты испытал во время приступа?'
 text_question_6 = '📍 Вопрос 6: Повлиял ли приступ на твой день, на психоэмоциональное состояние?'
 
-def format_question_and_answer(question: str, answer: str, question_time: time = time(), answer_time: time = time()) -> str:
-    if not answer:
-        return f'Q: {question}\nA: Нет ответа\n\n'
-    return f'Q ({make_readable_time(question_time)}): {question}\nA ({make_readable_time(answer_time)}): {answer}\n\n'
-
-def format_user_data(user_data: dict) -> str:
-    res = f'Новая анкета (недельная) от пользователя '+str(user_data['user_id'])+':\n\n'
-
-    for i in range(1, 6):
-        question_key = f'q{i}'
-        answer_key = f'a{i}'
-        if question_key in user_data and user_data[question_key]:
-            res += format_question_and_answer(
-                user_data[question_key]['question'],
-                user_data[answer_key]['answer'] if answer_key in user_data and user_data[answer_key] else 'Нет ответа',
-                user_data[question_key]['question_time'],
-                user_data[answer_key]['answer_time'] if answer_key in user_data and user_data[answer_key] else time()
-            )
-
-    return res
+def format_user_data(user_data: dict) -> str: # type 1 - daily, 2 - weekly
+    return fud(user_data, 2)

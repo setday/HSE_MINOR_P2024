@@ -33,6 +33,7 @@ async def start_weekly_servey(bot: Bot, user_id: int, storage: BaseStorage) -> N
     await state.update_data(servey_type='weekly')
     await state.update_data(date=timer.get_date())
     await state.update_data(user_id=user_id)
+    await state.update_data(user_name=dr.get_data(user_id)['info']['name'])
     await state.update_data(q1={
         'question_time': timer.get_time(),
         'question': text_question_1

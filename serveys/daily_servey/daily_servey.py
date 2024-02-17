@@ -68,6 +68,7 @@ class DailyServeyRouter(Router):
         self.callback_query.register(self.daily_servey_cancel, F.data == text_no)
 
         self.callback_query.register(self.question_handler_1, OrderDailyServey.writting_question_1, F.data == text_yes)
+        self.message.register(self.question_handler_1_alter, OrderDailyServey.writting_question_1)
         self.message.register(self.question_handler_2, OrderDailyServey.writting_question_2)
         self.message.register(self.question_handler_3, OrderDailyServey.writting_question_3)
         self.message.register(self.question_handler_4, OrderDailyServey.writting_question_4)
@@ -91,6 +92,19 @@ class DailyServeyRouter(Router):
         
         await interupt_daily_servey(self.bot, callback.from_user.id, state.storage)
 
+    async def daily_servey_cancel_alter(self, message: Message, state: FSMContext) -> None:
+        await state.update_data(a1={
+            'answer_time': timer.get_time(),
+            'answer': message.text
+        })
+        
+        await message.answer(text_daily_servey_cancelled)
+
+        user_data = await state.get_data()
+        await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
+        
+        await interupt_daily_servey(self.bot, message.from_user.id, state.storage)
+
     async def question_handler_1(self, callback: CallbackQuery, state: FSMContext) -> None:
         await state.update_data(a1={
             'answer_time': timer.get_time(),
@@ -99,6 +113,22 @@ class DailyServeyRouter(Router):
 
         await callback.answer('Начнём!')
         await self.bot.send_message(callback.from_user.id, text_question[1])
+
+        await state.update_data(q2={
+            'question_time': timer.get_time(),
+            'question': text_question[1]
+        })
+        user_data = await state.get_data()
+        await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
+        await state.set_state(OrderDailyServey.writting_question_2)
+
+    async def question_handler_1_alter(self, message: Message, state: FSMContext) -> None:
+        await state.update_data(a1={
+            'answer_time': timer.get_time(),
+            'answer': message.text
+        })
+
+        await self.bot.send_message(message.from_user.id, text_question[1])
 
         await state.update_data(q2={
             'question_time': timer.get_time(),
