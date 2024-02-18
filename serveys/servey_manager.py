@@ -122,7 +122,7 @@ class TimerServey:
                             ), 1
                         ))
                 case 5:
-                    if t < time(20, 0):
+                    if t < time(16, 0):
                         self.servey_queue.append((
                             timer.add_time(
                                 time(16, 0),
@@ -139,7 +139,7 @@ class TimerServey:
 
             if len(self.servey_queue) == 0:
                 await asyncio.sleep(
-                    timer.get_time_to(time(10, 00))
+                    timer.get_time_to(time(10, 00)) + 10
                 )
                 continue
             

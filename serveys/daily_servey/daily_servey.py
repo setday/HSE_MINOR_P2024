@@ -122,7 +122,7 @@ class DailyServeyRouter(Router):
             'question': text_question[1]
         })
         user_data = await state.get_data()
-        # await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
+        await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
         await state.set_state(OrderDailyServey.writting_question_2)
 
     async def question_handler_1_alter(self, message: Message, state: FSMContext) -> None:
@@ -138,7 +138,7 @@ class DailyServeyRouter(Router):
             'question': text_question[1]
         })
         user_data = await state.get_data()
-        # await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
+        await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
         await state.set_state(OrderDailyServey.writting_question_2)
 
     async def question_handler_2(self, message: Message, state: FSMContext) -> None:
@@ -154,7 +154,7 @@ class DailyServeyRouter(Router):
             'question': text_question[2]
         })
         user_data = await state.get_data()
-        # await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
+        await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
         await state.set_state(OrderDailyServey.writting_question_3)
 
     async def question_handler_3(self, message: Message, state: FSMContext) -> None:
@@ -170,7 +170,7 @@ class DailyServeyRouter(Router):
             'question': text_question[3]
         })
         user_data = await state.get_data()
-        # await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
+        await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
         await state.set_state(OrderDailyServey.writting_question_4)
 
     async def question_handler_4(self, message: Message, state: FSMContext) -> None:
@@ -186,7 +186,7 @@ class DailyServeyRouter(Router):
             'question': text_question[4]
         })
         user_data = await state.get_data()
-        # await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
+        await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
         await state.set_state(OrderDailyServey.writting_question_5)
 
     async def question_handler_5(self, message: Message, state: FSMContext) -> None:
@@ -196,7 +196,7 @@ class DailyServeyRouter(Router):
         })
         
         user_data = await state.get_data()
-        # print('Server info: %s', user_data)
+        print('Server info: %s', user_data)
         dr.merge_data(user_data['user_id'], user_data, 'servey')
         await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
         # save_user_data(user_data)
@@ -206,5 +206,3 @@ class DailyServeyRouter(Router):
         )
 
         await state.clear()
-
-        # await wait_next_servey(self.bot, message.chat.id, state.storage)
