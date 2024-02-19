@@ -19,7 +19,9 @@ def format_user_data(user_data: dict, type: int = 1) -> str: # type 1 - daily, 2
     res += str(user_data['user_id'])
     res += ' | ('
     # res += user_data['user_name']
-    res += '):\n\n'
+    res += '):\n\n('
+    res += user_data['date']
+    res += ')\n\n'
 
     for i in range(1, 6):
         question_key = f'q{i}'
