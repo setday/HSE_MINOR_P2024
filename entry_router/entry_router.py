@@ -29,7 +29,7 @@ class EntryRouter(Router):
         await message.answer(text_hello_with_explanation)
         await message.answer(text_entry_servey_suggestion)
 
-        dr.register_data(message.from_user.id, True, 'reg')
+        dr._get_user_object(message.from_user.id)['reg'] = True
 
         await message.answer(text_entry_servey_continuation_suggestion, reply_markup=get_entry_servey_suggestion_keyboard())
 
@@ -40,18 +40,24 @@ class EntryRouter(Router):
         if not message.from_user:
             return
 
-        dr.get_data(message.from_user.id)['info']['subscribe'] = False
-        dr.get_data(message.from_user.id)['reg'] = False
+        dr.get_user_info(message.from_user.id)['subscribe'] = False
+        dr._get_user_object(message.from_user.id)['reg'] = False
 
         await message.answer(text_subscription_stopped)
 
     async def suggest_update(self) -> None:
-        for user_id in dr.get_all_users():
-            # if dr.get_data(user_id)['reg']['subscribe']:
+        for user_id in dr.get_user_list():
+            # if dr.get_user_info(message.from_user.id)['subscribe']:
             await self.bot.send_message(user_id, text_update_is_there, reply_markup=get_update_keyboard())
 
     async def update(self, callback: types.CallbackQuery, state: FSMContext) -> None:
         await callback.answer('Обновлено!')
+
+        user_data = dr.get_user_info(callback.from_user.id)
+        user_data['name'] = \
+                (callback.from_user.first_name if callback.from_user.first_name else '') \
+                + ' ' \
+                + (callback.from_user.last_name if callback.from_user.last_name else '')
 
         await send_data_to_back(self.bot, f'Пользователь {callback.from_user.id} обновил бота.')
         

@@ -58,7 +58,7 @@ class BackChatRouter(Router):
             )
             return
         if user_id == 'all':
-            user_id = self.dr.get_all_users()
+            user_id = self.dr.get_user_list()
         else:
             user_id = [int(user_id)]
             

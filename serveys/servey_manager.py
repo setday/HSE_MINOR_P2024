@@ -27,13 +27,10 @@ async def weekly_dservey_start(callback: CallbackQuery, state: FSMContext) -> No
 
         return
 
-    # await callback.answer('Подписка оформлена! Стоимость подписки: 10 рублей в день (списание производится по номеру телефона).')
     await callback.answer('Ежедневные анкеты включены!')
     await callback.bot.send_message(callback.from_user.id, 'Пожалуйста, включи уведомления. Я буду отправлять сообщения в разное время. Скоро тебе начнут приходить краткие опросы о твоем состоянии. В качестве ответа тебе нужно будет либо нажать на кнопку, либо ввести несколько слов.\n(Если ты захочешь остановить опросы, напиши /stop)')
 
     # logger.info(f'Weekly servey for user {callback.from_user.id} started.')
-    
-    # await wait_next_servey(callback.bot, callback.from_user.id, state.storage)
 
 async def sds(bot: Bot, user_id: int, storage: BaseStorage) -> None:
     await interupt_daily_servey(bot, user_id, storage)
@@ -44,35 +41,18 @@ async def sws(bot: Bot, user_id: int, storage: BaseStorage) -> None:
     await start_weekly_servey(bot, user_id, storage)
     
 async def sds_for_all(bot: Bot, storage: BaseStorage) -> None:
-    for user_id in dr.get_all_users():
-        if dr.get_data(user_id)['info']['subscribe']:
+    for user_id in dr.get_user_list():
+        if dr.get_user_info(user_id).get('subscribe', True):
             await sds(bot, user_id, storage)
 
     await send_data_to_back(bot, 'Начат ежедневный опрос для всех подписчиков.')
 
 async def sws_for_all(bot: Bot, storage: BaseStorage) -> None:
-    for user_id in dr.get_all_users():
-        if dr.get_data(user_id)['info']['subscribe']:
+    for user_id in dr.get_user_list():
+        if dr.get_user_info(user_id).get('subscribe', True):
             await sws(bot, user_id, storage)
 
     await send_data_to_back(bot, 'Начат еженедельный опрос для всех подписчиков.')
-
-async def wait_next_servey(bot: Bot, user_id: int, storage: BaseStorage) -> None:
-    # user_data = dr.get_data(user_id)
-    # last_servey = user_data['servey'][-1]
-    # last_servey_date = last_servey['date']
-    # current_date = time.time()
-
-    # if current_date - last_servey_date > 604800:
-        # return True
-    # return False
-
-    # while True:
-        await asyncio.sleep(2)
-        await sds(bot, user_id, storage)
-
-        await asyncio.sleep(10)
-        await sws(bot, user_id, storage)
 
 is_timer_working = True
 

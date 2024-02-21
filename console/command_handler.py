@@ -53,9 +53,9 @@ class CommandHandler:
             return res
         
         if command == 'suggest_update' or command == 'su':
-            for user_id in self.dr.get_all_users():
-                # if dr.get_data(user_id)['reg']['subscribe']:
-                await self.bot.send_message(user_id, text_update_is_there, reply_markup=get_update_keyboard())
+            for user_id in self.dr.get_user_list():
+                if self.dr.get_user_info(user_id).get('subscribe', True):
+                    await self.bot.send_message(user_id, text_update_is_there, reply_markup=get_update_keyboard())
             res += 'Suggested update to all users.\n'
             return res
         

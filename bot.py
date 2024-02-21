@@ -57,17 +57,11 @@ async def main() -> None:
 
     print('Bot started')
 
-    # await entry_router_router.suggest_update()
-
     await poll
     await tstk
     await cmds
     await save
 
 if __name__ == "__main__":
-    # logging.basicConfig(
-        # level=logging.INFO,
-        # format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
-    # )
     print('Initializing...')
     asyncio.run(main())

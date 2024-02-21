@@ -6,7 +6,7 @@ back_chat_id = -1002086532375 # Prod
 
 class AdminChatFilter(BaseFilter):
     def __init__(self, is_this_admin_chat: bool):
-        # super().__init__()
+        super().__init__()
         
         self.is_this_feedback = is_this_admin_chat
 

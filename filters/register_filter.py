@@ -5,7 +5,7 @@ from utils.data_register import data_register as dr
 
 class RegisterFilter(BaseFilter):
     def __init__(self, is_register: bool = True):
-        # super().__init__()
+        super().__init__()
         
         self.is_register = is_register
 
@@ -13,10 +13,7 @@ class RegisterFilter(BaseFilter):
         if not message.from_user:
             return False
 
-        ud = dr.get_data(message.from_user.id)
-        if ud == None:
-            ud = {}
-        is_reg = ud['reg'] if 'reg' in ud else False
+        is_reg = dr._get_user_object(message.from_user.id).get('reg', False)
 
         if self.is_register:
             return is_reg == True

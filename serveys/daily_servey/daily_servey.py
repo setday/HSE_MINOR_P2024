@@ -34,12 +34,11 @@ async def start_daily_servey(bot: Bot, user_id: int, storage: BaseStorage) -> No
     await bot.send_message(user_id, text=text_question[0], reply_markup=keyboard)
     
     state = FSMContext(storage=storage, key=StorageKey(bot.id, user_id, user_id))
-    # print(storage, bot.id, user_id, state)
 
     await state.update_data(servey_type='daily')
     await state.update_data(date=timer.make_readable_date(timer.get_date()))
     await state.update_data(user_id=user_id)
-    # await state.update_data(user_name=dr.get_data(user_id)['info']['name'])
+    await state.update_data(user_name=dr.get_user_info(user_id).get('name', 'Unknown'))
     await state.update_data(q1={
         'question_time': timer.get_time(),
         'question': text_question[0]
@@ -197,7 +196,7 @@ class DailyServeyRouter(Router):
         
         user_data = await state.get_data()
         print('Server info: %s', user_data)
-        dr.merge_data(user_data['user_id'], user_data, 'servey')
+        dr.add_user_servey(user_data['user_id'], user_data)
         await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
         # save_user_data(user_data)
 
