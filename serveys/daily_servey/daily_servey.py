@@ -195,7 +195,7 @@ class DailyServeyRouter(Router):
         })
         
         user_data = await state.get_data()
-        print('Server info: %s', user_data)
+        # print('Server info: %s', user_data)
         dr.add_user_servey(user_data['user_id'], user_data)
         await update_data_to_back(self.bot, user_data['message_id'], format_user_data(user_data))
         # save_user_data(user_data)

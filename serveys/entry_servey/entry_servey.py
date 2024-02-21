@@ -68,7 +68,7 @@ async def severity_choosen(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.answer(text_writen_down)
 
     user_data = await state.get_data()
-    logger.info('Server info: %s', user_data)
+    # logger.info('Server info: %s', user_data)
     dr.set_user_info(user_data['user_id'], user_data)
 
     await send_data_to_back(callback.bot, format_user_data(user_data))

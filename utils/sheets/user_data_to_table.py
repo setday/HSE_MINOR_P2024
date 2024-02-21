@@ -31,7 +31,7 @@ def getService():
 
     return build('sheets', 'v4', credentials=creds)
 
-service = getService()
+# service = getService()
 
 frequency_answers = [
     '• Реже, чем раз в неделю',
