@@ -53,7 +53,7 @@ class BackChatRouter(Router):
         except ValueError:
             await message.answer(
                 "Ошибка: неправильный формат команды. Пример:\n"
-                "/send_stat <user_id> <stat>",
+                "/send_feedback <user_id> <stat>",
                 parse_mode=None
             )
             return

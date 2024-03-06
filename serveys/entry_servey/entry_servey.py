@@ -61,10 +61,16 @@ async def severity_choosen(callback: CallbackQuery, state: FSMContext) -> None:
 
         return
     
+    name = ''
+    if callback.from_user.first_name != None:
+        name = callback.from_user.first_name
+    if callback.from_user.last_name != None:
+        name += ' ' + callback.from_user.last_name
+    
     await state.update_data(severity=int(callback.data))
     await state.update_data(subscribe=True)
     await state.update_data(ud=str(callback.from_user))
-    await state.update_data(name=callback.from_user.first_name + ' ' + callback.from_user.last_name)
+    await state.update_data(name=name)
     await callback.answer(text_writen_down)
 
     user_data = await state.get_data()
